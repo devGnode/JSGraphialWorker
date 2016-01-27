@@ -20,7 +20,7 @@
       charMax : uint char
       lineMax : uint line,
       
-      bpp: uint bpp
+      bpp: uint bpp ( 1 || 2 || 4 )
     },
     _gui_:  Object graphicalUserInterface,
     palette: Array[ 2^bpp ] colorPalette,
