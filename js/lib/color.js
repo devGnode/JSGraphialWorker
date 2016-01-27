@@ -1,8 +1,8 @@
 //mkPaletteColor
-var mkPaletteColor = function( ){
+var mkPalletteColor = function( ){
 	
 	// 
-	function newPaletteMonochrome( bit /**/, deep ){
+	function newPalletteMonochrome( bit /**/, deep ){
 		var r = 0, g = 0, b = 0,
 		bit = Math.pow( 2, bit ),
 		bool = !1, add = Math.floor( ( 0x100 / ( bit-1 ) ) ),
@@ -35,7 +35,7 @@ var mkPaletteColor = function( ){
 	
 	//
 	function cga_colorPallette( ){
-	var p = newPaletteMonochrome( 2 );
+	var p = newPalletteMonochrome( 2 );
 	return[
 		p[0],0x0000aa,0x00aa00,0x00aaaa,0xaa0000,0xaa00aa,0xaa5500,p[1],
 		p[2],0x5555ff,0x55ff55,0x55ffff,0xff5555,0xff55ff,0xffff55,p[3]
@@ -61,17 +61,17 @@ var mkPaletteColor = function( ){
 	}
 	//
 	return {
-		newPaletteMonochrome:function( bpp ){
-			return newPaletteMonochrome( bpp&0x0f );
+		newPalletteMonochrome:function( bpp ){
+			return newPalletteMonochrome( bpp&0x0f );
 		},
-		rawPaletteColor:function( bpp, r,g,b ){
-			return newPaletteMonochrome( bpp, { r:r,g:g,b:b });
+		rawPalletteColor:function( bpp, r,g,b ){
+			return newPalletteMonochrome( bpp, { r:r,g:g,b:b });
 		},
-		newPaletteColor:function( bpp  ){
+		newPalletteColor:function( bpp  ){
 			var bp = Math.pow( 2, bpp ),
 				tmp, ret = [];
 				
-				tmp = newPaletteMonochrome( bpp/2 );
+				tmp = newPalletteMonochrome( bpp/2 );
 				simple_pallette( tmp, bpp/2, 1,0,0 );
 				simple_pallette( tmp, bpp/2, 0,1,0 );
 				simple_pallette( tmp, bpp/2, 0,0,1 );
@@ -80,7 +80,7 @@ var mkPaletteColor = function( ){
 				
 		return tmp;
 		},
-		newPaletteCGA:function( page ){
+		newPalletteCGA:function( page ){
 			return !page ? cga_colorPallette( ) : cga_colorPage( );
 		},
 	};
