@@ -3,10 +3,10 @@ var mkPaletteColor = function( ){
 	
 	// non-regular rgb
 	// default palette color 
-	// CGA, EGA, MCGA, VGA mod TEXT
+	// CGA = EG = MCGA = VGA mod TEXT
 	//https://upload.wikimedia.org/wikipedia/commons/d/df/EGA_Table.PNG
 	//https://fr.wikipedia.org/wiki/Color_Graphics_Adapter
-	//https://en.wikipedia.org/wiki/Video_Graphics_Array
+	//https://en.wikipedia.org/wiki/Video_Graphics_Array#Color_palette
 	var paletteDefault = [0x00,0x01,0x02,0x03,
 			      0x04,0x05,0x14,0x07,
 		    	      0x38,0x39,0x3A,0x3B,
