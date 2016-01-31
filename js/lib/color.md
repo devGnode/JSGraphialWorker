@@ -42,3 +42,4 @@ parameters : bool hasPage
   clr.newPalletteCGA( true );
   clr.newPalletteCGA(  );
 ``` 
+ 
