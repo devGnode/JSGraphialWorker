@@ -3,14 +3,14 @@ var mkPaletteColor = function( ){
 	
 	// non-regular rgb
 	// default palette color 
-	// CGA = EG = MCGA = VGA mod TEXT
+	// CGA, EGA, MCGA, VGA mod TEXT
 	//https://upload.wikimedia.org/wikipedia/commons/d/df/EGA_Table.PNG
 	//https://fr.wikipedia.org/wiki/Color_Graphics_Adapter
-	//https://en.wikipedia.org/wiki/Video_Graphics_Array#Color_palette
+	//https://en.wikipedia.org/wiki/Video_Graphics_Array
 	var paletteDefault = [0x00,0x01,0x02,0x03,
-			      0x04,0x05,0x14,0x07,
-		    	      0x38,0x39,0x3A,0x3B,
-			      0x3C,0x3D,0x3E,0x3F];
+						  0x04,0x05,0x14,0x07,
+						  0x38,0x39,0x3A,0x3B,
+						  0x3C,0x3D,0x3E,0x3F];
 	
 	// clc b of rgb
 	// x = 256/3 ( rgb 3bit )
@@ -25,11 +25,23 @@ var mkPaletteColor = function( ){
 		   ( ( parseInt( G ) << 1 | parseInt( g ) ) * add ) << 0x08 |
 		   ( ( parseInt( B ) << 1 | parseInt( b ) ) * add );
 	}
-	function checkBinary( b ){
-		var n= 6-(6-b.length ),
+	// RGBI 4bit
+	// 1000 intensity
+	// 0100 Red
+	// 0010 Green
+	// 0001 Blue
+	function rgbi( bpp, i, r,g,b, itr ){
+	var add = Math.floor( 0x100/bpp );
+	return ( ( r << 1 | i ) * add ) << 0x10 |
+		   ( ( ( g << 1 | i ) * add )/( !i && itr == 6 ? 2 : 1 ) ) << 0x08 |
+		   ( b << 1 | i ) * add;
+	}
+	
+	function checkBinary( b, bit ){
+		var n= bit-(bit-b.length ),
 			tmp = "";
 		try{	
-			while( n<6 ){
+			while( n<bit ){
 				tmp += "0",n++;
 			}
 		}catch(e){};
@@ -39,11 +51,52 @@ var mkPaletteColor = function( ){
 		var clr = [], tmp,
 			i = 0, len = paletteDefault.length;
 			
-			for(; i<len; i++ ){
-				tmp = checkBinary( base.decbin( paletteDefault[ i ] ) );
-				clr.push( RGBrgb( 3, tmp[3], tmp[4], tmp[5], tmp[0], tmp[1], tmp[2] ) );
-			}
+		for(; i<len; i++ ){
+			tmp = checkBinary( base.decbin( paletteDefault[ i ] ), 6 );
+			clr.push( RGBrgb( 3, tmp[3], tmp[4], tmp[5], tmp[0], tmp[1], tmp[2] ) );
+		}
 	return clr;
+	}
+	//
+	function cga_paletteText( ){
+		var clr = [],
+			tmp  = i = 0;
+		
+		for(; i< 16; i++ ){
+			tmp = checkBinary( base.decbin( i ), 4 );
+			clr.push( rgbi( 3, parseInt( tmp[0] ), // i
+							   parseInt( tmp[1] ), // r
+							   parseInt( tmp[2] ), // g
+							   parseInt( tmp[3] ), // b
+							   i ) );
+		}
+	return clr;
+	}
+	function cga_paletteGraphic( palette ){
+		var clr = ( palette || cga_paletteText( ) ),
+			ret = [0x00,0x03,0x05,0x07, // palette 1 low  
+				   0x00,0x00,0x00,0x00, // palette 1 hight
+				   0x00,0x02,0x04,0x06, // palette 2 low
+				   0x00,0x00,0x00,0x00, // palette 2 high
+				   0x00,0x03,0x04,0x07, // palette 3 low
+				   0x00,0x00,0x00,0x00],// palette 3 high
+				   i = 0, len = ret.length;
+	
+		for(; i< len-0x04; i++ ){
+			i += !(i%0x04) && i != 0 ? 0x04 : 0;
+			ret[ i+0x04 ] = clr[ ret[ i ] + ( ret[i] == 0  ? 0 :  0x08 ) ];
+			ret[ i+0x00 ] = clr[ ret[ i ] ]; 
+		}
+		
+	return ret;
+	}
+	function ega_paletteGraphic( ){
+		var i = 0, ret = [];
+		for(; i<64; i++ ){
+			tmp = checkBinary( base.decbin( i ), 6 );
+			ret.push( RGBrgb( 3, tmp[3], tmp[4], tmp[5], tmp[0], tmp[1], tmp[2] ) );	
+		}
+	return ret;
 	}
 	//
 	// http://www.cpcwiki.eu/index.php/Video_modes
@@ -71,27 +124,6 @@ var mkPaletteColor = function( ){
 		for( var i = 0; i < bit; i++ )
 			ret.push( rgb( ) );;
 		
-	return ret;
-	}
-	
-	//
-	function cga_colorPage( ){
-		var p = makeDefaultPalette4( );
-		return [
-			[p[0x00],p[0x03],p[0x05],p[0x07]],
-			[p[0x00],p[0x03],p[0x04],p[0x07]],
-			[p[0x00],p[0x02],p[0x04],p[0x06]],
-			[p[0x00],p[0x0B],p[0x0D],p[0x0F]],
-			[p[0x00],p[0x0B],p[0x0C],p[0x0F]],
-			[p[0x00],p[0x0A],p[0x0C],p[0x0E]],
-		];
-	}
-	function ega_colorPage( ){
-		var i = 0, ret = [];
-		for(; i<64; i++ ){
-			tmp = checkBinary( base.decbin( i ) );
-			ret.push( RGBrgb( 3, tmp[3], tmp[4], tmp[5], tmp[0], tmp[1], tmp[2] ) );	
-		}
 	return ret;
 	}
 	//
@@ -122,11 +154,11 @@ var mkPaletteColor = function( ){
 				
 		return tmp;
 		},
-		newPaletteCGA:function( page ){
-			return ( !page ? makeDefaultPalette4 : cga_colorPage )( );
+		newPaletteCGA:function( isGraphic ){
+			return ( !isGraphic ? cga_paletteText : cga_paletteGraphic )(  );
 		},
-		newPaletteEGA:function( page ){
-			return ( !page ? makeDefaultPalette4 : ega_colorPage )( );
+		newPaletteEGA:function( isGraphic ){
+			return ( !isGraphic ? makeDefaultPalette4 : ega_paletteGraphic )( );
 		},
 		newPaletteVGA:makeDefaultPalette4,
 	};
