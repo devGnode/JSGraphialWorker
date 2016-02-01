@@ -45,12 +45,10 @@ parameters : bool isGraphic
 	// 0x00....], palette 3 high
 ``` 
 >###newPalletteEGA
-using palette 6 bit RGBrgb 
 
-parameters : bool isGraphic
-<br>@return Array[ 16 ] color || Array[ 64 ]
+parameters : void
+<br>@return Array[ 16 ] color
 
  ```javascript
-  clr.newPalletteEGA(  );
-  clr.newPalletteEGA( true );
+  clr.newPalletteVGA(  ); // CGA == EGA == MCGA == VGA == paletteColors mode text
 ```
