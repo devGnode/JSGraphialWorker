@@ -12,6 +12,7 @@ var mkPaletteColor = function( ){
 						  0x38,0x39,0x3A,0x3B,
 						  0x3C,0x3D,0x3E,0x3F];
 	
+	// RGBrgb 6bit
 	// clc b of rgb
 	// x = 256/3 ( rgb 3bit )
 	// rgb RGB 
@@ -36,6 +37,12 @@ var mkPaletteColor = function( ){
 		   ( ( ( g << 1 | i ) * add )/( !i && itr == 6 ? 2 : 1 ) ) << 0x08 |
 		   ( b << 1 | i ) * add;
 	}
+	// rgb 3bit
+	function rgb3( r,g,b ){
+	return  ( r * 0xff ) << 0x10 |
+			( g * 0xff ) << 0x08 |
+			b * 0xff;
+	}
 	
 	function checkBinary( b, bit ){
 		var n= bit-(bit-b.length ),
@@ -47,17 +54,20 @@ var mkPaletteColor = function( ){
 		}catch(e){};
 	return (tmp+b);
 	}
-	function makeDefaultPalette4( ){
+	
+	function newPaletteColor3( ){
 		var clr = [], tmp,
-			i = 0, len = paletteDefault.length;
-			
-		for(; i<len; i++ ){
-			tmp = checkBinary( base.decbin( paletteDefault[ i ] ), 6 );
-			clr.push( RGBrgb( 3, tmp[3], tmp[4], tmp[5], tmp[0], tmp[1], tmp[2] ) );
-		}
+			i = 0;
+			for(; i<0x08; i++ ){
+				tmp = checkBinary( base.decbin( i ), 3 );
+				clr.push( rgb3(
+					tmp[0], // r
+					tmp[1], // g
+					tmp[2]  // b
+				));
+			}
 	return clr;
 	}
-	//
 	function cga_paletteText( ){
 		var clr = [],
 			tmp  = i = 0;
@@ -89,6 +99,16 @@ var mkPaletteColor = function( ){
 		}
 		
 	return ret;
+	}
+	function makeDefaultPalette4( ){
+		var clr = [], tmp,
+			i = 0, len = paletteDefault.length;
+			
+		for(; i<len; i++ ){
+			tmp = checkBinary( base.decbin( paletteDefault[ i ] ), 6 );
+			clr.push( RGBrgb( 3, tmp[3], tmp[4], tmp[5], tmp[0], tmp[1], tmp[2] ) );
+		}
+	return clr;
 	}
 	function ega_paletteGraphic( ){
 		var i = 0, ret = [];
@@ -153,6 +173,9 @@ var mkPaletteColor = function( ){
 				simple_palette( tmp, bpp/2, 0,1,1 );
 				
 		return tmp;
+		},
+		newPaletteColor3:function( ){
+			return newPaletteColor3( );
 		},
 		newPaletteCGA:function( isGraphic ){
 			return ( !isGraphic ? cga_paletteText : cga_paletteGraphic )(  );
