@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Progressbar_javascript</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	</head>
+		<body>
+
+			<section id="slideshow-container">
+				<figure id="slideshow-images">
+					<img class="slideshow-image active" src="img/1.jpg">
+					<img class="slideshow-image" src="img/2.jpg">
+					<img class="slideshow-image" src="img/3.jpg">
+					<img class="slideshow-image" src="img/4.jpg">
+					<img class="slideshow-image" src="img/2.jpg">
+					<img class="slideshow-image" src="img/3.jpg">
+					<img class="slideshow-image" src="img/4.jpg">
+					<img class="slideshow-image" src="img/2.jpg">
+					<img class="slideshow-image" src="img/3.jpg">
+					<img class="slideshow-image" src="img/4.jpg">
+					<img class="slideshow-image" src="img/2.jpg">
+					<img class="slideshow-image" src="img/3.jpg">
+					<img class="slideshow-image" src="img/4.jpg">
+					<img class="slideshow-image" src="img/2.jpg">
+					<img class="slideshow-image" src="img/3.jpg">
+					<img class="slideshow-image" src="img/4.jpg">
+					<img class="slideshow-image" src="img/2.jpg">
+					<img class="slideshow-image" src="img/3.jpg">
+					<img class="slideshow-image" src="img/4.jpg">
+					<img class="slideshow-image" src="img/2.jpg">
+					<img class="slideshow-image" src="img/3.jpg">
+					<img class="slideshow-image" src="img/4.jpg">
+					<img class="slideshow-image" src="img/2.jpg">
+					<img class="slideshow-image" src="img/3.jpg">
+					<img class="slideshow-image" src="img/4.jpg">
+				</figure>
+				<nav id="slideshow-option">
+					<div id="slideshow-pause"></div>
+					<div id="slideshow-previous">&#10094;</div>
+					<div id="slideshow-next">&#10095;</div>
+					<div id="slideshow-progress"></div>
+				</nav>
+			</section>
+
+<script>
+var a = document.getElementsByClassName( "slideshow-image" ),
+	p = document.getElementById( "slideshow-progress" );
+
+	console.log(	100/ a.length );
+p.onclick = function( e ){
+	var n = Math.ceil( e.offsetX * a.length / this.offsetWidth );
+
+	p.style.backgroundSize = (( parseInt( ( e.offsetX * 100 / this.offsetWidth ) / (100/ a.length )+1 )*(100/ a.length) ))+ "% 100%";
+
+	console.log((( parseInt( ( e.offsetX * 100 / this.offsetWidth ) / (100/ a.length )+1 )*(100/ a.length) )));
+};
+
+// T = 100 / NombreImage 
+//
+// eventclick recup le pourczntage du click = Y 
+
+// ( arrondir( Y / T ) + 1 ) * T 
+
+// ( ( arrondir( Y / T ) + 1 ) * T )+'%'
+
+</script>
+
+		</body>
+</html>
